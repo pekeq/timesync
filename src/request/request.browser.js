@@ -45,10 +45,17 @@ export function fetch (method, url, body, headers, callback, timeout) {
   }
 }
 
-export function post (url, body, timeout) {
+export function post (url, body, timeout, now) {
   if (typeof url === 'object' && typeof url.emit === 'function') {
     return new Promise((resolve, reject) => {
+      var start = now();
       url.emit('timesync', body, (res) => {
+        var end = now();
+        var roundtrip = end - start;
+        if (roundtrip > timeout) {
+          return reject(new Error('Request timed out.'));
+        }
+
         resolve([res, true]);
       });
     });

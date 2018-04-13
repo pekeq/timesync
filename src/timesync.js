@@ -53,7 +53,7 @@ export function create(options) {
      * @param {*} data
      */
     send: function (to, data, timeout) {
-        return request.post(to, data, timeout)
+        return request.post(to, data, timeout, timesync.options.now)
             .then(function (val) {
               var res = val[0];
 
