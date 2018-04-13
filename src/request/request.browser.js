@@ -46,6 +46,14 @@ export function fetch (method, url, body, headers, callback, timeout) {
 }
 
 export function post (url, body, timeout) {
+  if (typeof url === 'object' && typeof url.emit === 'function') {
+    return new Promise((resolve, reject) => {
+      url.emit('timesync', body, (res) => {
+        resolve([res, true]);
+      });
+    });
+  }
+
   return new Promise((resolve, reject) => {
     var callback = (err, res, status) => {
       if (err) {
